@@ -28,6 +28,7 @@ async function run() {
         await client.connect();
         const db = client.db('TravelEase')
         const vehicleCol = db.collection('Vehicles')
+        const bookingCol = db.collection('Bookings')
 
         // all vehicle page api
         app.get('/all-vehicles', async (req, res) => {
@@ -36,6 +37,7 @@ async function run() {
         })
 
         app.post('/all-vehicles', async (req, res)=>{
+            
             const data = req.body
             const result = await vehicleCol.insertOne(data)
             res.send(result)
@@ -52,6 +54,20 @@ async function run() {
             const query = {_id: new ObjectId(id)}
             const result = await vehicleCol.findOne(query)
             res.send(result);
+        })
+
+        //booking api for vehicle details
+        app.post('/bookings', async(req, res)=> {
+            const bookingData = req.body;
+            const result = await bookingCol.insertOne(bookingData);
+            res.send(result);
+        })
+
+        app.get('/my-vehicles', async (req, res)=>{
+            const email = req.query.email
+            const result = await vehicleCol.find({
+                userEmail: email}).toArray()
+                res.send(result)
         })
         // await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
