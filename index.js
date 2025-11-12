@@ -57,12 +57,26 @@ async function run() {
         })
 
         //booking api for vehicle details
-        app.post('/bookings', async(req, res)=> {
+        app.post('/my-bookings', async(req, res)=> {
             const bookingData = req.body;
             const result = await bookingCol.insertOne(bookingData);
             res.send(result);
         })
 
+        app.get('/my-bookings', async (req, res) => {
+            const email = req.query.email;
+            const result = await bookingCol.find({
+                userEmail: email}).toArray();
+            res.send(result);
+        })
+        app.get('/my-bookings/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: new ObjectId(id) }
+            const result = await bookingCol.findOne(query)
+            res.send(result);
+        })
+
+        // my vehicles api
         app.get('/my-vehicles', async (req, res)=>{
             const email = req.query.email
             const result = await vehicleCol.find({
