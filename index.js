@@ -69,6 +69,7 @@ async function run() {
                 userEmail: email}).toArray();
             res.send(result);
         })
+        //my booking details api
         app.get('/my-bookings/:id', async (req, res) => {
             const id = req.params.id
             const query = { _id: new ObjectId(id) }
@@ -82,6 +83,24 @@ async function run() {
             const result = await vehicleCol.find({
                 userEmail: email}).toArray()
                 res.send(result)
+        })
+
+        //update vehicle data
+        app.put('/all-vehicles/:id', async (req, res)=>{
+            const id = req.params.id
+            const data = req.body
+            
+            
+            const query = { _id: new ObjectId(id) }
+            const update = {
+                $set : data
+            }
+            const result = await vehicleCol.updateOne(query, update)
+
+            res.send({
+                success: true,
+                result
+            })
         })
         // await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
