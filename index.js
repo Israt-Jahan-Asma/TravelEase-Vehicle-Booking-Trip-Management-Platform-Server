@@ -89,8 +89,7 @@ async function run() {
         app.put('/all-vehicles/:id', async (req, res)=>{
             const id = req.params.id
             const data = req.body
-            
-            
+
             const query = { _id: new ObjectId(id) }
             const update = {
                 $set : data
@@ -98,9 +97,17 @@ async function run() {
             const result = await vehicleCol.updateOne(query, update)
 
             res.send({
-                success: true,
                 result
             })
+        })
+
+        //delete api
+        app.delete('/all-vehicles/:id', async(req, res)=>{
+            const id = req.params.id
+            const query = { _id: new ObjectId(id) }
+            const result = await vehicleCol.deleteOne(query)
+
+            res.send( result )
         })
         // await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
